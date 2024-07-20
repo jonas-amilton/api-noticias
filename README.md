@@ -1,66 +1,152 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Documentação dos endpoints no Postman
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Collection do Postman em: docs\api-noticias.postman_collection.json
 
-## About Laravel
+### Documentação JWT utilizada: https://jwt-auth.readthedocs.io/en/develop/
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Login
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Descrição: Autentica o usuário e retorna um token JWT.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Método: POST
 
-## Learning Laravel
+URL: http://localhost:8989/api/auth/login
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Body: raw (JSON)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+json:
+`{
+"email": "user@example.com",
+"password": "password"
+}`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Register
 
-## Laravel Sponsors
+Descrição: Registra um novo usuário.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Método: POST
 
-### Premium Partners
+URL: http://localhost:8989/api/auth/register
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Body: raw (JSON)
 
-## Contributing
+json:
+`{
+"name": "User Name",
+"email": "user@example.com",
+"password": "password"
+}`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Me
 
-## Code of Conduct
+Método: POST
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Descrição: Retorna os dados do usuário autenticado.
 
-## Security Vulnerabilities
+URL: http://localhost:8989/api/me
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Headers:
 
-## License
+-   Authorization: Bearer {token}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Logout
+
+Método: POST
+
+Descrição: Faz logout do usuário e invalida o token JWT.
+
+URL: http://localhost:8989/api/logout
+
+Headers:
+
+-   Authorization: Bearer {token}
+
+## Refresh Token
+
+Método: POST
+
+Descrição: Atualiza o token JWT.
+
+URL: http://localhost:8989/api/refresh
+
+Headers:
+
+-   Authorization: Bearer {token}
+
+## Get All News
+
+Método: GET
+
+Descrição: Retorna todas as notícias.
+
+URL: http://localhost:8989/api/news
+
+Headers:
+
+-   Authorization: Bearer {token}
+
+## Create News
+
+Método: POST
+
+Descrição: Cria uma nova notícia.
+
+URL: http://localhost:8989/api/news
+
+Headers:
+
+-   Authorization: Bearer {token}
+
+Body: raw (JSON)
+
+json:
+`{
+    "title": "News Title",
+    "content": "News Content",
+    "author": "Author Name"
+}`
+
+## Update News
+
+Método: PUT
+
+Descrição: Atualiza uma notícia existente.
+
+URL: http://localhost:8989/api/news/{id}
+
+Headers:
+
+-   Authorization: Bearer {token}
+
+Body: raw (JSON)
+
+json:
+`{
+"title": "Updated News Title",
+"content": "Updated News Content",
+"author": "Updated Author Name"
+}`
+
+## Delete News
+
+Método: DELETE
+
+Descrição: Deleta uma notícia.
+
+URL: http://localhost:8989/api/news/{id}
+
+Headers:
+
+-   Authorization: Bearer {token}
+
+## Get News by ID
+
+Método: GET
+
+Descrição: Retorna uma notícia específica pelo ID.
+
+URL: http://localhost:8989/api/news/{id}
+
+Headers:
+
+-   Authorization: Bearer {token}
