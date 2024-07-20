@@ -1,45 +1,80 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 /*
 |--------------------------------------------------------------------------
-| Rotas RESTful para Recurso de Notícias
+| Rotas RESTful para API de Notícias
 |--------------------------------------------------------------------------
 |
-| Esta linha define rotas RESTful para gerenciar o recurso de notícias.
-| Ao usar 'apiResource', o Laravel cria automaticamente as rotas padrão
-| para operações CRUD (Create, Read, Update, Delete) no controller
-| 'App\Http\Controllers\NewsController'.
+| Este arquivo define rotas RESTful para gerenciar o as notícias.
+| Possui rotas padrão para operações CRUD
+| (Create, Read, Update, Delete) no controller
+| 'app\Http\Controllers\NewsController'.
 |
-|
-| rotas RESTful: Route::apiResource('news', 'App\Http\Controllers\NewsController');
+| Possui rotas com autenticação JWT
+| (Login, Register, Me, Logout, Refresh) no controller
+| 'app\Http\Controllers\AuthController.php'.
 */
 
 
-// Get All News
-// http://localhost:8989/api/news
-Route::get('/news', [NewsController::class, 'index']);
+/**
+ * ------------------------------------------------------------------------
+ * Rotas de Autenticação
+ * ------------------------------------------------------------------------
+ * As rotas de autenticação permitem o registro e login de usuários.
+ * Uma vez autenticado, o usuário pode acessar as rotas protegidas.
+ */
+Route::group(['prefix' => 'auth'], function ($router) {
+    // Login user
+    // http://localhost:8989/api/auth/login
+    Route::post('login', [AuthController::class, 'login']);
 
+    // Register user
+    // http://localhost:8989/api/auth/register
+    Route::post('register', [AuthController::class, 'register']);
+});
 
-// Create News
-// http://localhost:8989/api/news
-Route::post('/news', [NewsController::class, 'store']);
+/**
+ * -------------------------------------------------------------------------
+ * Rotas Protegidas por Autenticação
+ * -------------------------------------------------------------------------
+ * Essas rotas estão dentro de um grupo de middleware auth:api,
+ * que garante que apenas usuários autenticados possam acessá-las.
+ */
+Route::middleware(['auth:api'])->group(function () {
+    // Get the authenticated User
+    // http://localhost:8989/api/me
+    Route::post('me', [AuthController::class, 'me']);
 
-// Update News
-// http://localhost:8989/api/news/{id}
-Route::put('/news/{id}', [NewsController::class, 'update']);
+    // logout user
+    // http://localhost:8989/api/logout
+    Route::post('logout', [AuthController::class, 'logout']);
 
-// Delete News
-// http://localhost:8989/api/news/{id}
-Route::delete('/news/{id}', [NewsController::class, 'destroy']);
+    // Refresh a token
+    // http://localhost:8989/api/refresh
+    Route::post('refresh', [AuthController::class, 'refresh']);
 
-// Get News by ID
-// http://localhost:8989/api/news/{id}
-Route::get('/news/{id}', [NewsController::class, 'show']);
+    // Get All News
+    // http://localhost:8989/api/news
+    Route::get('/news', [NewsController::class, 'index']);
+
+    // Create News
+    // http://localhost:8989/api/news
+    Route::post('/news', [NewsController::class, 'store']);
+
+    // Update News
+    // http://localhost:8989/api/news/{id}
+    Route::put('/news/{id}', [NewsController::class, 'update']);
+
+    // Delete News
+    // http://localhost:8989/api/news/{id}
+    Route::delete('/news/{id}', [NewsController::class, 'destroy']);
+
+    // Get News by ID
+    // http://localhost:8989/api/news/{id}
+    Route::get('/news/{id}', [NewsController::class, 'show']);
+});
