@@ -10,8 +10,6 @@ services:
             dockerfile:
                 Dockerfile
                 # Reinicia o serviço a menos que ele seja parado manualmente
-        ports:
-            - "8000:80"
         restart:
             unless-stopped
             # Define o diretório de trabalho dentro do contêiner
